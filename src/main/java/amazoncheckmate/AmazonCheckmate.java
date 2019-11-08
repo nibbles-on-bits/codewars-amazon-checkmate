@@ -116,11 +116,15 @@ public class AmazonCheckmate {
 		// DEBUGGING ABOVE
 		
 		
-		// build a list of positions that are unoccupied
+		// build a list of positions that are unoccupied and not within 1 square of the amazon piece
 		for (SquareCord sc : AmazonCheckmate.SquareCord.values()) {
 			if (sc==SquareCord.valueOf(king) || sc == SquareCord.valueOf(amazon)) continue;
+			//if (getDoubleAttackSquares(SquareCord.valueOf(king), SquareCord.valueOf(amazon)).contains(sc)) continue;
+			if (getPossibleKingMoves(SquareCord.valueOf(king)).contains(sc)) continue;	// can't be within reach of the white king
+			
 			
 			BlackKingState bks = getBlackKingState(sc, SquareCord.valueOf(king), SquareCord.valueOf(amazon));
+			
 			
 			if (bks == BlackKingState.CHECKMATE) {
 				ret[0]++;
@@ -158,6 +162,17 @@ public class AmazonCheckmate {
 	}
 	
 	
+	/**
+	 * Generate a list of game positions that are reachable by both pieces
+	 * @return
+	 */
+	/*static List<SquareCord> getDoubleAttackSquares(SquareCord whiteKingLoc, SquareCord whiteAmazonLoc) {
+		List<SquareCord> doubleAttackSquares = new ArrayList<SquareCord>();
+		for (SquareCord sc : AmazonCheckmate.getPossibleKingMoves(whiteKingLoc)) {
+			if (isInAmazonKillzone(sc, whiteAmazonLoc)) doubleAttackSquares.add(sc);
+		}
+		return doubleAttackSquares;
+	}*/
 	
 	// TODO : WRITE THIS!  Stopped here!
 	static BlackKingState getBlackKingState(SquareCord blackKingLoc, SquareCord whiteKingLoc, SquareCord whiteAmazonLoc) {

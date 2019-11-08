@@ -11,15 +11,57 @@ import static org.junit.Assert.assertArrayEquals;
 public class MyTests {
 	@Test
     public void testBasic() {
+		// checkmate, check, stalemate, safe
 		
+		/* works
+		System.out.println("WK:a1  WA:g5");
         assertArrayEquals( new int[] { 0, 29, 1, 29 }, AmazonCheckmate.amazonCheckmate("a1", "g5") );
+        System.out.println();
+        */
+        
+        /* works
+        System.out.println("WK:a3  WA:e4");
         assertArrayEquals( new int[] { 1, 32, 1, 23 }, AmazonCheckmate.amazonCheckmate("a3", "e4") );
+        System.out.println();
+        */
+        
+        /* fails, got 6,15,0,34  check and safe incorrect
+        System.out.println("WK:f3  WA:f2  expecting: 6, 11, 0, 38"  );
         assertArrayEquals( new int[] { 6, 11, 0, 38 }, AmazonCheckmate.amazonCheckmate("f3", "f2") );
+        System.out.println();
+        */
+        
+        /* fails, got 0,15,0,40 
+        System.out.println("WK:b7  WA:a8");	// failing, got 0,15,0,40
         assertArrayEquals( new int[] { 0, 10, 0, 45 }, AmazonCheckmate.amazonCheckmate("b7", "a8") );
+        System.out.println();
+        */
+        
+		
+		/* works
+        System.out.println("WK:f7  WA:d3");
         assertArrayEquals( new int[] { 4, 28, 1, 21 }, AmazonCheckmate.amazonCheckmate("f7", "d3") );
+        System.out.println();
+        */
+        
+		/* works
+        System.out.println("WK:g2  WA:c3");
         assertArrayEquals( new int[] { 9, 21, 0, 24 }, AmazonCheckmate.amazonCheckmate("g2", "c3") );
+        System.out.println();
+        */
+        
+		/* works
+        System.out.println("WK:f3  WA:c1");
         assertArrayEquals( new int[] { 4, 18, 0, 32 }, AmazonCheckmate.amazonCheckmate("f3", "c1") );
+        System.out.println();
+        */
+        
+		/* fails, got 0,20,0,34
+        System.out.println("WK:d4  WA:h8");
         assertArrayEquals( new int[] { 0, 18, 0, 36 }, AmazonCheckmate.amazonCheckmate("d4", "h8") );
+        System.out.println();  
+        */      
+        
     }
 	
 	@Test

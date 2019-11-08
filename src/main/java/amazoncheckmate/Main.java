@@ -12,9 +12,15 @@ public class Main {
 		//boolean tc = Main.isInAmazonKillzone(SquareCords.a1, SquareCords.h8);
 		//System.out.println(tc);
 		
-		char c = 'b'-1;
-		System.out.println(c);
+		//char c = 'b'-1;
+		//System.out.println(c);
 
+		//List<AmazonCheckmate.SquareCords> moves;
+		//moves = AmazonCheckmate.getPossibleKingMoves(AmazonCheckmate.SquareCords.e4);
+		
+		//System.out.println(moves);
+		
+		System.out.println("Please run unit tests!");
 	}
 	
 

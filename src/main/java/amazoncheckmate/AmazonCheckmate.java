@@ -51,6 +51,12 @@ public class AmazonCheckmate {
    	      -----------------------------------------
 	         a    b    c    d    e    f    g    h
 	 */
+	
+	/* The codewars challenge basically boils down to this :
+	 *  Given a White Amazon Piece and  a White King Piece on the Chess Board, determine
+	 *  how many places for a Black King Piece would yield a CHECKMAKE, CHECK, STALEMATE, or SAFE
+	 *  situation for the Black player.  Considering that's it's Black's turn.
+	 */
 	         
 	public enum SquareCords
 	{
@@ -64,7 +70,7 @@ public class AmazonCheckmate {
 		a1,b1,c1,d1,e1,f1,g1,h1
 	}
 	
-	// Create an enumeration for states
+	
 	public static enum BlackKingStates 
 	{
 		CHECKMATE,
@@ -92,11 +98,16 @@ public class AmazonCheckmate {
 	 * Codewars objective
 	 * @param king
 	 * @param amazon
-	 * @return
+	 * @return an array with 4 elements.  
+	 * 			[0] - # of check-mate positions 
+	 * 			[1] - # of check positions
+	 * 			[3] - # of stale-mate positions
+	 * 			[4] - # of safe positions with a safe next move
 	 */
 	public static int[] amazonCheckmate(String king, String amazon) {
+		// TODO : Write this !
+		
 
-		// coding and coding..
 		return null;
 	}
 	
@@ -121,31 +132,46 @@ public class AmazonCheckmate {
 	 * @return
 	 */
 	static boolean canBecomeSafe(SquareCords blackKingLoc, SquareCords whiteKingLoc, SquareCords whiteAmazonLoc) {
-		boolean ret = false;
 		
-		String l = blackKingLoc.toString().substring(0,1);
-		String n = blackKingLoc.toString().substring(1,2);
-		boolean canMoveUp    = "7654321".contains(l);
-		boolean canMoveDown  = "8765432".contains(l);
-		boolean canMoveLeft  = "bcdefgh".contains(n);
-		boolean canMoveRight = "abcdefg".contains(n);
+		// TODO : Write unit Tests for this 
 		
-		if (canMoveLeft) {
-			String s0 = Character.toString(blackKingLoc.toString().charAt(0) - 1);
-			String s1 = n;
-			SquareCords.valueOf(s0 + s1);
+		// TODO : Stopped here
+		// basically want to get all the possible moves,
+		// iterate thru them and call isSafe() for each possibility
+		// if we hit a true, return true
+		// otherwise return false after the iterations
+		List<SquareCords> moves = getPossibleKingMoves(blackKingLoc);
+		for (SquareCords m : moves) {
+			if (isBlackKingSafe(m, whiteKingLoc, whiteAmazonLoc)) return true;
 		}
 		
-		//Integer.parseInt(s)
 		
-		//"bcdefgh".containsString(substring)
-		//if ((blackKingLoc.toString().charAt(0) >= 'b') && (blackKingLoc.toString().charAt(1)) {
-		
-		
-		// iterate over the possible moves
-		// determine if King is safe after making that move
-		
-		return ret;
+		return false;
+	}
+	
+	/**
+	 * Determine if the black king is safe.  Black king coordinates can match white king or white amazon
+	 *  coordinates.  In this situation, this would be an example of the black king capturing one of the 
+	 *  opponent pieces 
+	 *  
+	 * @param blackKingLoc
+	 * @param whiteKingLoc
+	 * @param whiteAmazonLoc
+	 * @return
+	 */
+	static boolean isBlackKingSafe(SquareCords blackKingLoc, SquareCords whiteKingLoc, SquareCords whiteAmazonLoc) {
+		// TODO : Build Unit Test, and test well!
+		if (blackKingLoc == whiteKingLoc) {
+			// only check if White Amazon can capture the Black King
+			return !isInAmazonKillzone(blackKingLoc, whiteAmazonLoc);
+		} else if (blackKingLoc == whiteAmazonLoc) {
+			return !isInKingKillzone(blackKingLoc, whiteKingLoc);
+		} else {
+			if ((isInKingKillzone(blackKingLoc, whiteKingLoc)) || (isInAmazonKillzone(blackKingLoc, whiteAmazonLoc))) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	
@@ -159,10 +185,10 @@ public class AmazonCheckmate {
 		
 		String l = kingLoc.toString().substring(0,1);
 		String n = kingLoc.toString().substring(1,2);
-		boolean canMoveUp    		= "7654321".contains(l);
-		boolean canMoveDown  		= "8765432".contains(l);
-		boolean canMoveLeft  		= "bcdefgh".contains(n);
-		boolean canMoveRight 		= "abcdefg".contains(n);
+		boolean canMoveUp    		= "7654321".contains(n);
+		boolean canMoveDown  		= "8765432".contains(n);
+		boolean canMoveLeft  		= "bcdefgh".contains(l);
+		boolean canMoveRight 		= "abcdefg".contains(l);
 		boolean canMoveUpLeft 		= (canMoveUp && canMoveLeft);
 		boolean canMoveUpRight 		= (canMoveUp && canMoveRight);
 		boolean canMoveDownLeft 	= (canMoveDown && canMoveLeft);

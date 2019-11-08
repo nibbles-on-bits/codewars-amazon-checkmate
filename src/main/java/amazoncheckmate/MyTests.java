@@ -5,8 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 //import static org.junit.Assert.assertEquals;
 //import static org.junit.Assert.assertArrayEquals;
-import org.junit.runners.JUnit4;
-import junit.framework.Assert;
+//import org.junit.runners.JUnit4;
 
 
 public class MyTests {
@@ -21,6 +20,109 @@ public class MyTests {
         assertArrayEquals( new int[] { 4, 18, 0, 32 }, AmazonCheckmate.amazonCheckmate("f3", "c1") );
         assertArrayEquals( new int[] { 0, 18, 0, 36 }, AmazonCheckmate.amazonCheckmate("d4", "h8") );
     }*/
+	
+	@Test
+	public void test_canBecomeSafe() {
+		// TODO : Write this !
+		
+		AmazonCheckmate.SquareCords blackKingLoc, whiteKingLoc, whiteAmazonLoc;
+		
+		/*
+		   -----------------------------------------
+		8  |    |    | ** |    |    |    | ** |    |
+		   -----------------------------------------
+		7  |    |    | ** |    |    | ** |    |    |
+		   -----------------------------------------
+		6  | ** | ** | ** | ** | ** |    |    |    |
+		   -----------------------------------------
+		5  | ** | ** | ** | ** | ** | ** |    |    |
+		   -----------------------------------------
+		4  | ** | ** | WA | ** | ** | ** | ** | ** |
+		   -----------------------------------------
+		3  | ** | ** | ** | ** | ** |    | !! | !! |
+		   -----------------------------------------
+		2  | ** | ** | ** | ** | ** |    | !! | WK |
+		   -----------------------------------------
+		1  |    |    | ** |    |    | ** | !! | !! |
+		   -----------------------------------------
+		      a    b    c    d    e    f    g    h
+		*/
+		whiteKingLoc = AmazonCheckmate.SquareCords.h2;
+		whiteAmazonLoc = AmazonCheckmate.SquareCords.c4;
+		
+		blackKingLoc = AmazonCheckmate.SquareCords.h4;
+		assertTrue(AmazonCheckmate.canBecomeSafe(blackKingLoc, whiteKingLoc, whiteAmazonLoc));
+		
+		blackKingLoc = AmazonCheckmate.SquareCords.a4;
+		assertFalse(AmazonCheckmate.canBecomeSafe(blackKingLoc, whiteKingLoc, whiteAmazonLoc));
+	}
+	
+	@Test
+	public void test_isBlackKingSafe() {
+		// Now build out some scenarios
+		AmazonCheckmate.SquareCords blackKingLoc, whiteKingLoc, whiteAmazonLoc;
+		
+		/*
+		   -----------------------------------------
+		8  |    |    | ** |    |    |    | ** |    |
+		   -----------------------------------------
+		7  |    |    | ** |    |    | ** |    |    |
+		   -----------------------------------------
+		6  | ** | ** | ** | ** | ** |    |    |    |
+		   -----------------------------------------
+		5  | ** | ** | ** | ** | ** | ** |    |    |
+		   -----------------------------------------
+		4  | ** | ** | WA | ** | ** | ** | ** | ** |
+		   -----------------------------------------
+		3  | ** | ** | ** | ** | ** | !! |    |    |
+		   -----------------------------------------
+		2  | ** | ** | ** | ** | WK | !! |    |    |
+		   -----------------------------------------
+		1  |    |    | ** | !! | !! | ** |    |    |
+		   -----------------------------------------
+		      a    b    c    d    e    f    g    h
+		*/
+		whiteKingLoc = AmazonCheckmate.SquareCords.e2;
+		whiteAmazonLoc = AmazonCheckmate.SquareCords.c4;
+		
+		blackKingLoc = AmazonCheckmate.SquareCords.h8;
+		assertTrue(AmazonCheckmate.isBlackKingSafe(blackKingLoc, whiteKingLoc, whiteAmazonLoc));
+		
+		blackKingLoc = AmazonCheckmate.SquareCords.d6;
+		assertFalse(AmazonCheckmate.isBlackKingSafe(blackKingLoc, whiteKingLoc, whiteAmazonLoc));
+		
+		/////////////////////////////////////////////////////////////////////////////////////////////
+		
+		/*
+		   -----------------------------------------
+		8  |    |    | ** |    |    |    | ** |    |
+		   -----------------------------------------
+		7  |    |    | ** |    |    | ** |    |    |
+		   -----------------------------------------
+		6  | ** | ** | ** | ** | ** |    |    |    |
+		   -----------------------------------------
+		5  | ** | ** | ** | ** | ** | ** |    |    |
+		   -----------------------------------------
+		4  | ** | ** | WA | ** | ** | ** | ** | ** |
+		   -----------------------------------------
+		3  | ** | ** | ** | ** | ** |    | !! | !! |
+		   -----------------------------------------
+		2  | ** | ** | ** | ** | ** |    | !! | WK |
+		   -----------------------------------------
+		1  |    |    | ** |    |    | ** | !! | !! |
+		   -----------------------------------------
+		      a    b    c    d    e    f    g    h
+		*/
+		
+		whiteKingLoc = AmazonCheckmate.SquareCords.h2;
+		whiteAmazonLoc = AmazonCheckmate.SquareCords.c4;
+		
+		blackKingLoc = AmazonCheckmate.SquareCords.h2;	// Situation where where BK takes WK and ends up safe
+		assertTrue(AmazonCheckmate.isBlackKingSafe(blackKingLoc, whiteKingLoc, whiteAmazonLoc));
+		
+		
+		///////////////////////////////////////////////////////////////////////////////////////////
+	}
 	
 	@Test 
 	public void test_isInKingKillzone() {

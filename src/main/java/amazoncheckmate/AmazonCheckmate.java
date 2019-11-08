@@ -58,7 +58,7 @@ public class AmazonCheckmate {
 	 *  situation for the Black player.  Considering that's it's Black's turn.
 	 */
 	         
-	public enum SquareCords
+	public enum SquareCord
 	{
 		a8,b8,c8,d8,e8,f8,g8,h8,
 		a7,b7,c7,d7,e7,f7,g7,h7,
@@ -71,7 +71,7 @@ public class AmazonCheckmate {
 	}
 	
 	
-	public static enum BlackKingStates 
+	public static enum BlackKingState 
 	{
 		CHECKMATE,
 		CHECK,
@@ -106,21 +106,71 @@ public class AmazonCheckmate {
 	 */
 	public static int[] amazonCheckmate(String king, String amazon) {
 		// TODO : Write this !
+		int[] ret = {0,0,0,0};
+		// DEBUGGING BELOW
+		List<SquareCord> CheckMateLocations = new ArrayList<SquareCord>();
+		List<SquareCord> CheckLocations = new ArrayList<SquareCord>();
+		List<SquareCord> StaleMateLocations = new ArrayList<SquareCord>();
+		List<SquareCord> SafeLocations = new ArrayList<SquareCord>();
 		
-
-		return null;
-	}
-	
-	static BlackKingStates getBlackKingState(SquareCords blackKingLoc, SquareCords whiteKingLoc, SquareCords whiteAmazonLoc) {
-		BlackKingStates ret = null;
+		// DEBUGGING ABOVE
 		
 		
+		// build a list of positions that are unoccupied
+		for (SquareCord sc : AmazonCheckmate.SquareCord.values()) {
+			if (sc==SquareCord.valueOf(king) || sc == SquareCord.valueOf(amazon)) continue;
+			
+			BlackKingState bks = getBlackKingState(sc, SquareCord.valueOf(king), SquareCord.valueOf(amazon));
+			
+			if (bks == BlackKingState.CHECKMATE) {
+				ret[0]++;
+				CheckMateLocations.add(sc);
+			}
+			
+			if (bks == BlackKingState.CHECK) {
+				ret[1]++;
+				CheckLocations.add(sc);
+			}
+			
+			if (bks == BlackKingState.STALEMATE) {
+				ret[2]++;
+				StaleMateLocations.add(sc);
+			}
+			
+			if (bks == BlackKingState.SAFE) {
+				ret[3]++;
+				SafeLocations.add(sc);
+			}
+		}
 		
-		// Test SAFE
-		boolean blackKingSafe = ((isInAmazonKillzone(blackKingLoc, whiteAmazonLoc) == false) && (isInKingKillzone(blackKingLoc, whiteKingLoc)== false));
+		// TODO : print out the results here so we can troubleshoot STALEMATE not adding up to what we are expecting
+		System.out.printf("Checkmate Locations (%2d) : ", CheckMateLocations.size());
+		System.out.println(CheckMateLocations);
+		System.out.printf("Check Locations     (%2d) : ", CheckLocations.size());
+		System.out.println(CheckLocations);
+		System.out.printf("Stalemate Locations (%2d) : ", StaleMateLocations.size());
+		System.out.println(StaleMateLocations);
+		System.out.printf("Safe Locations      (%2d) : ", SafeLocations.size());
+		System.out.println(SafeLocations);
 		
 
 		return ret;
+	}
+	
+	
+	
+	// TODO : WRITE THIS!  Stopped here!
+	static BlackKingState getBlackKingState(SquareCord blackKingLoc, SquareCord whiteKingLoc, SquareCord whiteAmazonLoc) {
+
+		boolean blackIsSafe = isBlackKingSafe(blackKingLoc, whiteKingLoc, whiteAmazonLoc);
+		boolean blackCanBecomeSafe = canBecomeSafe(blackKingLoc, whiteKingLoc, whiteAmazonLoc);
+		
+		if (blackIsSafe && blackCanBecomeSafe) return BlackKingState.SAFE;
+		if (blackIsSafe && !blackCanBecomeSafe) return BlackKingState.STALEMATE;
+		if (!blackIsSafe && blackCanBecomeSafe) return BlackKingState.CHECK;
+		if (!blackIsSafe && !blackCanBecomeSafe) return BlackKingState.CHECKMATE;
+		
+		return null;	// this should never happen
 	}
 	
 
@@ -131,20 +181,13 @@ public class AmazonCheckmate {
 	 * @param whiteAmazonLoc
 	 * @return
 	 */
-	static boolean canBecomeSafe(SquareCords blackKingLoc, SquareCords whiteKingLoc, SquareCords whiteAmazonLoc) {
+	static boolean canBecomeSafe(SquareCord blackKingLoc, SquareCord whiteKingLoc, SquareCord whiteAmazonLoc) {
 		
-		// TODO : Write unit Tests for this 
-		
-		// TODO : Stopped here
-		// basically want to get all the possible moves,
-		// iterate thru them and call isSafe() for each possibility
-		// if we hit a true, return true
-		// otherwise return false after the iterations
-		List<SquareCords> moves = getPossibleKingMoves(blackKingLoc);
-		for (SquareCords m : moves) {
+		// TODO : Write more unit Tests for this
+		List<SquareCord> moves = getPossibleKingMoves(blackKingLoc);
+		for (SquareCord m : moves) {
 			if (isBlackKingSafe(m, whiteKingLoc, whiteAmazonLoc)) return true;
 		}
-		
 		
 		return false;
 	}
@@ -159,7 +202,7 @@ public class AmazonCheckmate {
 	 * @param whiteAmazonLoc
 	 * @return
 	 */
-	static boolean isBlackKingSafe(SquareCords blackKingLoc, SquareCords whiteKingLoc, SquareCords whiteAmazonLoc) {
+	static boolean isBlackKingSafe(SquareCord blackKingLoc, SquareCord whiteKingLoc, SquareCord whiteAmazonLoc) {
 		// TODO : Build Unit Test, and test well!
 		if (blackKingLoc == whiteKingLoc) {
 			// only check if White Amazon can capture the Black King
@@ -180,8 +223,8 @@ public class AmazonCheckmate {
 	 * @param kingLoc current location of the king
 	 * @return a list of board coordinates that are reachable
 	 */
-	static List<SquareCords> getPossibleKingMoves(SquareCords kingLoc) {
-		List<SquareCords> moves = new ArrayList<SquareCords>();
+	static List<SquareCord> getPossibleKingMoves(SquareCord kingLoc) {
+		List<SquareCord> moves = new ArrayList<SquareCord>();
 		
 		String l = kingLoc.toString().substring(0,1);
 		String n = kingLoc.toString().substring(1,2);
@@ -196,35 +239,35 @@ public class AmazonCheckmate {
 		
 		if (canMoveLeft) {
 			String s = Character.toString(kingLoc.toString().charAt(0)-1) + Character.toString(kingLoc.toString().charAt(1));
-			moves.add(SquareCords.valueOf(s));
+			moves.add(SquareCord.valueOf(s));
 		}
 		if (canMoveUpLeft) {
 			String s = Character.toString(kingLoc.toString().charAt(0)-1) + Character.toString(kingLoc.toString().charAt(1)+1);
-			moves.add(SquareCords.valueOf(s));
+			moves.add(SquareCord.valueOf(s));
 		}
 		if (canMoveUp) {
 			String s = Character.toString(kingLoc.toString().charAt(0)) + Character.toString(kingLoc.toString().charAt(1)+1);
-			moves.add(SquareCords.valueOf(s));
+			moves.add(SquareCord.valueOf(s));
 		}
 		if (canMoveUpRight) {
 			String s = Character.toString(kingLoc.toString().charAt(0)+1) + Character.toString(kingLoc.toString().charAt(1)+1);
-			moves.add(SquareCords.valueOf(s));
+			moves.add(SquareCord.valueOf(s));
 		}
 		if (canMoveRight) {
 			String s = Character.toString(kingLoc.toString().charAt(0)+1) + Character.toString(kingLoc.toString().charAt(1));
-			moves.add(SquareCords.valueOf(s));
+			moves.add(SquareCord.valueOf(s));
 		}
 		if (canMoveDownRight) {
 			String s = Character.toString(kingLoc.toString().charAt(0)+1) + Character.toString(kingLoc.toString().charAt(1)-1);
-			moves.add(SquareCords.valueOf(s));
+			moves.add(SquareCord.valueOf(s));
 		}
 		if (canMoveDown) {
 			String s = Character.toString(kingLoc.toString().charAt(0)) + Character.toString(kingLoc.toString().charAt(1)-1);
-			moves.add(SquareCords.valueOf(s));
+			moves.add(SquareCord.valueOf(s));
 		}
 		if (canMoveDownLeft) {
 			String s = Character.toString(kingLoc.toString().charAt(0)-1) + Character.toString(kingLoc.toString().charAt(1)-1);
-			moves.add(SquareCords.valueOf(s));
+			moves.add(SquareCord.valueOf(s));
 		}		
 		
 		return moves;
@@ -239,7 +282,7 @@ public class AmazonCheckmate {
 	 * @param amazonLoc Location of the Amazon Piece
 	 * @return
 	 */
-	static boolean isInAmazonKillzone(SquareCords victimLoc, SquareCords amazonLoc) {
+	static boolean isInAmazonKillzone(SquareCord victimLoc, SquareCord amazonLoc) {
 		
 		// Check same Row / Column
 		if (victimLoc.toString().charAt(0) == amazonLoc.toString().charAt(0)) return true;	// same row
@@ -257,7 +300,7 @@ public class AmazonCheckmate {
 		return false;
 	}
 	
-	static boolean isInKingKillzone(SquareCords victimLoc, SquareCords kingLoc) {
+	static boolean isInKingKillzone(SquareCord victimLoc, SquareCord kingLoc) {
 		int a = Math.abs(victimLoc.toString().charAt(0)-kingLoc.toString().charAt(0));	// horz distance
 		int b = Math.abs(victimLoc.toString().charAt(1)-kingLoc.toString().charAt(1));	// vert distance
 		return ((a<=1) && (b<=1));

@@ -1,5 +1,6 @@
 package amazoncheckmate;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Main {
@@ -19,8 +20,12 @@ public class Main {
 		//moves = AmazonCheckmate.getPossibleKingMoves(AmazonCheckmate.SquareCords.e4);
 		
 		//System.out.println(moves);
+		String s = Arrays.toString(AmazonCheckmate.amazonCheckmate("a1", "g5"));
 		
-		System.out.println("Please run unit tests!");
+		System.out.println(s);
+		
+		//System.out.println("Please run unit tests!");
+		
 	}
 	
 
